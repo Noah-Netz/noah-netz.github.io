@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INL — Noah Netz</title>
+</head>
+<body>
+
+  <header>
+    <h1>Noah Netz</h1>
+    <nav>
+      <a href="index.html">← Back to portfolio</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <article>
+      <h2>Full-Duplex Gigabit Ethernet Signal Separation Using LSTM</h2>
+      <p>Idaho National Laboratory / DOE Omni Technology Alliance Program</p>
+
+      <h3>Overview</h3>
+      <p>During my internship at Idaho National Laboratory through the DOE Omni Technology Alliance Program, I worked with fellow intern Stephen Ude, under mentor Keith Mecham, on a cybersecurity research project: can a full-duplex Ethernet signal be split back into its two original signals without physically tapping the line? Normally, separating a merged signal requires an active tap, decoupling it, then recombining and retransmitting the data. But an active tap has a weakness: a hacker can send a test signal, measure the delay it introduces, and detect that a tap is in place, then work around it. We wanted to find out if machine learning could separate the signal passively instead, with no measurable delay to give it away.</p>
+
+      <h3>My Role</h3>
+      <p>My task was essentially "prove this can work." In a full-duplex Ethernet connection, both server A and server B transmit at the same time on the same conductor pair (<a href="https://www.techtarget.com/searchnetworking/definition/full-duplex" target="_blank" rel="noopener">here's a quick explainer on full-duplex</a> if you're not familiar). That's efficient, but it means anyone observing the line just sees one merged waveform, not two separate signals.</p>
+      <p>We used 100 GB Ethernet rather than standard gigabit Ethernet for this proof of concept. Both are still dual-channel, meaning server A and B transmit simultaneously, but 100 GB Ethernet encodes each signal across 3 voltage levels (1V, 0V, -1V) instead of gigabit's 5 (1V, 0.5V, 0V, -0.5V, -1V). Fewer levels meant a simpler signal for our model to learn from, which made sense for an initial proof of concept before tackling the more complex gigabit case.</p>
+      <p>Working with Stephen, I helped build the data pipeline and database for the project, then worked on training a long short-term memory recurrent neural network (LSTM) to reconstruct the two original signals from the merged waveform. We chose an LSTM over a standard recurrent neural network because standard RNNs suffer from the vanishing gradient problem, which slows learning over longer sequences; LSTMs are built to get around that.</p>
+      <p>Our method relied on measuring the merged signal at two different points along the Ethernet line. Because the two original signals combine differently depending on where along the line, and at what point in time, they're measured, comparing those two measurements against each other gave the model enough information to work out what the two original signals must have been. That's the core insight the LSTM learned to exploit.</p>
+      <p>Most existing research on this kind of signal separation focused on audio waveforms, not electrical ones, so a lot of the early work was figuring out which techniques would even apply. We tried Independent Component Analysis first, a common approach for audio, but it didn't perform well on our electrical waveform data, which pushed us toward the LSTM approach instead.</p>
+
+      <h3>What I Learned &amp; Results</h3>
+      <p>This was my first real exposure to applying machine learning to a hardware/signal-processing problem rather than a typical dataset, and my first time working with Pandas for data handling and PyTorch to build and train the model. Beyond the specific tools, it taught me how to actually train and evaluate a neural network: preparing data, choosing an architecture, and iterating when a first approach (like ICA) doesn't work.</p>
+      <p>Our LSTM model was able to reconstruct the original signals with roughly 95% accuracy. The project was a collaboration between INL and Montana State University, and it later grew into a published paper, with research continuing under MSU researcher Maximus Marceau. That continued work is patent pending.</p>
+
+      <h3>Skills</h3>
+      <ul>
+        <li>Python</li>
+        <li>Pandas</li>
+        <li>PyTorch</li>
+        <li>Machine Learning / Neural Network Training</li>
+        <li>LSTM / RNN Architecture</li>
+        <li>Data Pipelines</li>
+        <li>Databases</li>
+        <li>HPC / Supercomputing</li>
+      </ul>
+
+      <h3>Publication</h3>
+      <p><a href="https://ieeexplore.ieee.org/document/11039454" target="_blank" rel="noopener">Read the published paper on IEEE Xplore</a></p>
+    </article>
+
+  </main>
+
+  <footer>
+    <!-- contact info, "portfolio in progress" note, etc. -->
+  </footer>
+
+</body>
+</html>
